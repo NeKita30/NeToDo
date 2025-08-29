@@ -1,0 +1,2 @@
+add_executable(test_start test_start.cpp)
+target_link_libraries(test_start netodo_notes)
