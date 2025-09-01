@@ -5,5 +5,6 @@
 #include "netodo/notes/Note.hpp"
 
 int main() {
-    Note note;
+    std::string name = "hello";
+    Note note(name);
 }

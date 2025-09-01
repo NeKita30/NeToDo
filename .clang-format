@@ -31,13 +31,25 @@ BreakConstructorInitializersBeforeComma: false
 ColumnLimit: 120
 ConstructorInitializerAllOnOneLineOrOnePerLine: false
 ContinuationIndentWidth: 8
-IncludeCategories: 
-  - Regex: '^<.*'
-    Priority: 1
-  - Regex: '^".*'
-    Priority: 2
+SortIncludes: true
+IncludeBlocks: Preserve
+
+IncludeCategories:
+  # 1. Заголовок текущего файла (если совпадает с именем .cpp)
   - Regex: '.*'
+    Priority: 1
+
+  # 2. Стандартная библиотека (<>)
+  - Regex: '^<.*>'
+    Priority: 2
+
+  # 3. Сторонние библиотеки (например, Boost, fmt и т.д.)
+  - Regex: '^<(boost|fmt|gtest)/.*>'
     Priority: 3
+
+  # 4. Свои заголовки ("mylib/..."), можно настроить под название проекта
+  - Regex: '^"netodo/.*"'
+    Priority: 4
 IncludeIsMainRegex: '([-_](test|unittest))?$'
 IndentCaseLabels: true
 IndentWidth: 4
@@ -57,3 +69,4 @@ SpacesInCStyleCastParentheses: false
 SpacesInParentheses: false
 TabWidth: 4
 ...
+

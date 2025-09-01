@@ -5,8 +5,14 @@
 #ifndef NOTE_HPP
 #define NOTE_HPP
 
-class Note {
+#include <string>
 
+struct Note {
+    std::string name;
+    std::string short_name;
+    std::string description;
+
+    explicit Note(const std::string& name);
 };
 
 

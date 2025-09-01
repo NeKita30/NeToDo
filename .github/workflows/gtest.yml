@@ -24,3 +24,8 @@ jobs:
           make
           cd app
           ./test_start
+
+      - name: Run tests
+        run: |
+          cd ../test
+          ./note_test
