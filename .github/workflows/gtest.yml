@@ -27,10 +27,13 @@ jobs:
           cd build
           cmake ..
           make
-          cd app
+
+      - name: Run test start
+        run: |
+          cd build/app
           ./test_start
 
       - name: Run tests
         run: |
-          cd test
+          cd build/test
           ./note_test
