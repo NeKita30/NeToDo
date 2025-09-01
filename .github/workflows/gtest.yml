@@ -16,6 +16,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt-get install -y libgtest-dev cmake build-essential
+
       - name: Build and run test start
         run: |
           mkdir build
