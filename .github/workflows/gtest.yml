@@ -21,7 +21,7 @@ jobs:
           sudo apt update
           sudo apt-get install -y libgtest-dev cmake build-essential
 
-      - name: Build and run test start
+      - name: Build
         run: |
           mkdir build
           cd build
