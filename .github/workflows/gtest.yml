@@ -20,7 +20,13 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt-get install -y libgtest-dev sqlitecpp cmake build-essential
+          sudo apt-get install -y libgtest-dev libsqlite3-dev cmake build-essential
+          git clone https://github.com/SRombauts/SQLiteCpp.git
+          cd SQLiteCpp && mkdir build && cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release
+          make -j$(nproc)
+          sudo make install
+
 
       - name: Build
         run: |
