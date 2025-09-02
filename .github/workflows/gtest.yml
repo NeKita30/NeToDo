@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - dev
   pull_request:
     branches:
       - master
@@ -37,3 +38,4 @@ jobs:
         run: |
           cd build/test
           ./note_test
+          ./db_test
