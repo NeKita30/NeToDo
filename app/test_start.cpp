@@ -6,5 +6,5 @@
 
 int main() {
     std::string name = "hello";
-    Note note(name);
+    Note note(101, name);
 }
