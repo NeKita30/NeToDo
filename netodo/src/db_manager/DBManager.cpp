@@ -30,9 +30,9 @@ Note DBManager::GetNote(int64_t id) const {
                             "WHERE id = ?;");
     query.bind(1, id);
     query.executeStep();
-    Note note(query.getColumn(1).getString());
-    note.short_name = query.getColumn(2).getString();
-    note.description = query.getColumn(3).getString();
+    Note note(query.getColumn(1).getString(),
+query.getColumn(2).getString(),
+query.getColumn(3).getString());
     return note;
 }
 
@@ -40,9 +40,9 @@ std::vector<Note> DBManager::GetAllNotes() const {
     std::vector<Note> notes;
     SQLite::Statement query(db_, "SELECT * FROM note_table;");
     while (query.executeStep()) {
-        notes.emplace_back(query.getColumn(1).getString());
-        notes.back().short_name = query.getColumn(2).getString();
-        notes.back().description = query.getColumn(3).getString();
+        notes.emplace_back(query.getColumn(1).getString(),
+query.getColumn(2).getString(),
+ query.getColumn(3).getString());
     }
     return notes;
 }
