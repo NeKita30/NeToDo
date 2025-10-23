@@ -10,17 +10,15 @@ DBManager::DBManager(const std::string& db_path):
     db_.exec("CREATE TABLE IF NOT EXISTS note_table ("
             "id INTEGER PRIMARY KEY AUTOINCREMENT,"
             "name TEXT NOT NULL,"
-            "short_name TEXT,"
             "description TEXT);"
             );
 }
 
 int64_t DBManager::AddNote(const Note& note) const {
-    SQLite::Statement query(db_, "INSERT INTO note_table (name, short_name, description) "
-                            "VALUES (?, ?, ?);");
+    SQLite::Statement query(db_, "INSERT INTO note_table (name, description) "
+                            "VALUES (?, ?);");
     query.bind(1, note.name);
-    query.bind(2, note.short_name);
-    query.bind(3, note.description);
+    query.bind(2, note.description);
     query.exec();
     return db_.getLastInsertRowid();
 }
@@ -31,8 +29,7 @@ Note DBManager::GetNote(int64_t id) const {
     query.bind(1, id);
     query.executeStep();
     Note note(query.getColumn(1).getString(),
-query.getColumn(2).getString(),
-query.getColumn(3).getString());
+query.getColumn(2).getString());
     return note;
 }
 
@@ -41,8 +38,7 @@ std::vector<Note> DBManager::GetAllNotes() const {
     SQLite::Statement query(db_, "SELECT * FROM note_table;");
     while (query.executeStep()) {
         notes.emplace_back(query.getColumn(1).getString(),
-query.getColumn(2).getString(),
- query.getColumn(3).getString());
+ query.getColumn(2).getString());
     }
     return notes;
 }

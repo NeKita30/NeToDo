@@ -14,13 +14,13 @@ namespace {
                                                      {"completed", NoteStatus::Completed}};
 }
 
-TaskDBManager::TaskDBManager(const std::string& db_path): db_(db_path,
-    SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE) {
+TaskDBManager::TaskDBManager(const std::string& db_path):
+    db_(db_path,
+        SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE) {
     db_.exec("CREATE TABLE IF NOT EXISTS task_table ("
             "id INTEGER PRIMARY KEY AUTOINCREMENT,"
             "parent_id INTEGER DEFAULT 0,"
             "name TEXT DEFAULT '',"
-            "short_name TEXT DEFAULT '',"
             "description TEXT DEFAULT '',"
             "status TEXT DEFAULT 'not started',"
             "progress INTEGER DEFAULT 0,"
@@ -37,7 +37,7 @@ int64_t TaskDBManager::AddTask(const Task& task) const {
 
 Task TaskDBManager::GetTask(int64_t id) const {
     SQLite::Statement query(db_, "SELECT * FROM task_table "
-                                 "WHERE id = ?;");
+                            "WHERE id = ?;");
     query.bind(1, id);
     return GetByQuery(query)[0];
 }
@@ -51,27 +51,26 @@ std::vector<Task> TaskDBManager::GetByQuery(SQLite::Statement& query) {
     std::vector<Task> tasks;
     while (query.executeStep()) {
         tasks.emplace_back(query.getColumn(1).getInt64(), query.getColumn(0).getInt64(),
-            query.getColumn(2).getString(), query.getColumn(3).getString(),
-            query.getColumn(4).getString(), query.getColumn(6).getInt(),
-            query.getColumn(7).getInt(), std::vector<int64_t>(),
-            text_to_status[query.getColumn(5).getString()]);
+                           query.getColumn(2).getString(), query.getColumn(4).getString(),
+                           query.getColumn(6).getInt(),
+                           query.getColumn(7).getInt(), std::vector<int64_t>(),
+                           text_to_status[query.getColumn(5).getString()]);
     }
     return tasks;
 }
 
 void TaskDBManager::UpdateTask(int64_t id, const Task& task) const {
     SQLite::Statement query(db_, "UPDATE task_table "
-                                 "SET parent_id = ?, name = ?, short_name = ?, "
-                                 "description = ?, status = ?, progress = ?, max_progress = ? "
-                                 "WHERE id = ?;");
+                            "SET parent_id = ?, name = ?,"
+                            "description = ?, status = ?, progress = ?, max_progress = ? "
+                            "WHERE id = ?;");
     query.bind(1, task.parent_id);
     query.bind(2, task.name);
-    query.bind(3, task.short_name);
-    query.bind(4, task.description);
-    query.bind(5, status_to_text[task.status]);
-    query.bind(6, task.progress_bar);
-    query.bind(7, task.max_bar);
-    query.bind(8, id);
+    query.bind(3, task.description);
+    query.bind(4, status_to_text[task.status]);
+    query.bind(5, task.progress_bar);
+    query.bind(6, task.max_bar);
+    query.bind(7, id);
     query.exec();
 }
 
@@ -79,7 +78,3 @@ void TaskDBManager::UpdateTask(int64_t id, const Task& task) const {
 void TaskDBManager::Clear() {
     db_.exec("DELETE FROM task_table;");
 }
-
-
-
-

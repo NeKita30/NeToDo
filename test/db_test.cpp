@@ -38,7 +38,7 @@ TEST(DBTest, ToDoTableTest) {
 
     ToDo found_todo = db.GetToDo(id1);
     ASSERT_EQ(found_todo.name, "hello");
-    ASSERT_EQ(found_todo.short_name, "hi");
+    ASSERT_EQ(found_todo.description, "hi");
     ASSERT_EQ(found_todo.status, NoteStatus::NotStarted);
 
     ToDo todo2(101, 0, "Привет");
@@ -48,10 +48,9 @@ TEST(DBTest, ToDoTableTest) {
     ASSERT_EQ(ch[0].id, id2);
     ASSERT_EQ(ch[0].name, "Привет");
 
-    db.UpdateToDo(id2, ToDo("QWERTY", "abc", "", NoteStatus::InProgress));
+    db.UpdateToDo(id2, ToDo("QWERTY", "", NoteStatus::InProgress));
     found_todo = db.GetToDo(id2);
     ASSERT_EQ(found_todo.name, "QWERTY");
-    ASSERT_EQ(found_todo.short_name, "abc");
     ASSERT_EQ(found_todo.status, NoteStatus::InProgress);
 
     std::vector<ToDo> todos = db.GetAllToDo();
@@ -68,9 +67,9 @@ TEST(DBTest, TaskTableTest) {
 
     Task found_task = db.GetTask(id1);
     ASSERT_EQ(found_task.name, "hello");
-    ASSERT_EQ(found_task.short_name, "hi");
+    ASSERT_EQ(found_task.description, "hi");
 
-    Task task2("ABC", "a", "abcdef");
+    Task task2("ABC", "abcdef");
     int64_t id2 = db.AddTask(task2);
     std::vector<Task> tasks = db.GetAllTask();
     ASSERT_EQ(tasks.size(), 2);
@@ -83,7 +82,7 @@ TEST(DBTest, TaskTableTest) {
 
     found_task = db.GetTask(id2);
     ASSERT_EQ(found_task.name, "ABC");
-    ASSERT_EQ(found_task.short_name, "a");
+    ASSERT_EQ(found_task.description, "abcdef");
     ASSERT_EQ(found_task.status, NoteStatus::InProgress);
 
     db.Clear();

@@ -16,13 +16,13 @@ namespace {
                                                      {"completed", NoteStatus::Completed}};
 }
 
-ToDoDBManager::ToDoDBManager(const std::string& db_path): db_(db_path,
-    SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE) {
+ToDoDBManager::ToDoDBManager(const std::string& db_path):
+    db_(db_path,
+        SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE) {
     db_.exec("CREATE TABLE IF NOT EXISTS todo_table ("
             "id INTEGER PRIMARY KEY AUTOINCREMENT,"
             "parent_id INTEGER DEFAULT 0,"
             "name TEXT DEFAULT '',"
-            "short_name TEXT DEFAULT '',"
             "description TEXT DEFAULT '',"
             "status TEXT DEFAULT 'not started');"
             );
@@ -38,7 +38,7 @@ int64_t ToDoDBManager::AddToDo(const ToDo& todo) const {
 
 ToDo ToDoDBManager::GetToDo(const int64_t id) const {
     SQLite::Statement query(db_, "SELECT * FROM todo_table "
-                                 "WHERE id = ?");
+                            "WHERE id = ?");
     query.bind(1, id);
     return GetByQuery(query)[0];
 }
@@ -50,7 +50,7 @@ std::vector<ToDo> ToDoDBManager::GetAllToDo() const {
 
 std::vector<ToDo> ToDoDBManager::GetAllToDoByParent(const int64_t parent_id) const {
     SQLite::Statement query(db_, "SELECT * FROM todo_table "
-                                 "WHERE parent_id = ?");
+                            "WHERE parent_id = ?");
     query.bind(1, parent_id);
     return GetByQuery(query);
 }
@@ -59,8 +59,8 @@ std::vector<ToDo> ToDoDBManager::GetByQuery(SQLite::Statement& query) {
     std::vector<ToDo> todos;
     while (query.executeStep()) {
         todos.emplace_back(query.getColumn(1).getInt64(), query.getColumn(0).getInt64(),
-            query.getColumn(2).getString(), query.getColumn(3).getString(),
-            query.getColumn(4).getString(), text_to_status[query.getColumn(5).getString()]);
+                           query.getColumn(2).getString(), query.getColumn(4).getString(),
+                           text_to_status[query.getColumn(5).getString()]);
     }
 
     return todos;
@@ -68,14 +68,13 @@ std::vector<ToDo> ToDoDBManager::GetByQuery(SQLite::Statement& query) {
 
 void ToDoDBManager::UpdateToDo(const int64_t id, const ToDo& todo) const {
     SQLite::Statement query(db_, "UPDATE todo_table "
-             "SET parent_id = ?, name = ?, short_name = ?, description = ?, status = ?"
-             "WHERE id = ?;");
+                            "SET parent_id = ?, name = ?, description = ?, status = ?"
+                            "WHERE id = ?;");
     query.bind(1, todo.parent_id);
     query.bind(2, todo.name);
-    query.bind(3, todo.short_name);
-    query.bind(4, todo.description);
-    query.bind(5, status_to_text[todo.status]);
-    query.bind(6, id);
+    query.bind(3, todo.description);
+    query.bind(4, status_to_text[todo.status]);
+    query.bind(5, id);
     query.exec();
 }
 
