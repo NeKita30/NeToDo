@@ -7,16 +7,15 @@
 
 #include "netodo/notes/Note.hpp"
 
-struct ToDo: Note {
+struct ToDo : Note {
     int64_t parent_id;
     NoteStatus status = NoteStatus::NotStarted;
 
-    explicit ToDo(const std::string& name,
-        const std::string& short_name = "", const std::string& description = "",
-        NoteStatus status = NoteStatus::NotStarted);
-    ToDo(int64_t parent_id, int64_t id, const std::string& name,
-        const std::string& short_name = "", const std::string& description = "",
-        NoteStatus status = NoteStatus::NotStarted);
+    explicit ToDo(const std::string& name = "", const std::string& description = "",
+                  NoteStatus status = NoteStatus::NotStarted);
+
+    ToDo(int64_t parent_id, int64_t id, const std::string& name = "", const std::string& description = "",
+         NoteStatus status = NoteStatus::NotStarted);
 };
 
 #endif //TODO_HPP
