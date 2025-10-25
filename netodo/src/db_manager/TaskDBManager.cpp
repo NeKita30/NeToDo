@@ -99,10 +99,10 @@ std::vector<Task> TaskDBManager::GetByQuery(SQLite::Statement& query) {
         std::vector<Task> tasks;
         while (query.executeStep()) {
             tasks.emplace_back(query.getColumn(1).getInt64(), query.getColumn(0).getInt64(),
-                               query.getColumn(2).getString(), query.getColumn(4).getString(),
-                               query.getColumn(6).getInt(),
-                               query.getColumn(7).getInt(), std::vector<int64_t>(),
-                               text_to_status[query.getColumn(5).getString()]);
+                               query.getColumn(2).getString(), query.getColumn(3).getString(),
+                               query.getColumn(5).getInt(),
+                               query.getColumn(6).getInt(), std::vector<int64_t>(),
+                               text_to_status[query.getColumn(4).getString()]);
         }
         return tasks;
     } catch (const SQLite::Exception& err) {

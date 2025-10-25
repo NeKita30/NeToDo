@@ -125,8 +125,8 @@ std::vector<ToDo> ToDoDBManager::GetByQuery(SQLite::Statement& query) {
         std::vector<ToDo> todos;
         while (query.executeStep()) {
             todos.emplace_back(query.getColumn(1).getInt64(), query.getColumn(0).getInt64(),
-                               query.getColumn(2).getString(), query.getColumn(4).getString(),
-                               text_to_status[query.getColumn(5).getString()]);
+                               query.getColumn(2).getString(), query.getColumn(3).getString(),
+                               text_to_status[query.getColumn(4).getString()]);
         }
 
         return todos;
