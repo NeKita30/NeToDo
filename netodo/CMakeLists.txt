@@ -12,6 +12,7 @@ add_library(db_manager SHARED src/db_manager/DBManager.cpp
 target_include_directories(db_manager PUBLIC include)
 #target_link_libraries(db_manager PRIVATE SQLiteCpp sqlite3)
 target_link_libraries(db_manager PUBLIC netodo_notes SQLiteCpp sqlite3)
+target_link_libraries(db_manager PRIVATE netodo_exceptions)
 
 add_library(netodo_exceptions SHARED src/exceptions/CustomException.cpp
                                      src/exceptions/ExceptionBuilder.cpp
