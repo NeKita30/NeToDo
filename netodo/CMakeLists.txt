@@ -11,3 +11,10 @@ add_library(db_manager SHARED src/db_manager/DBManager.cpp
 target_include_directories(db_manager PUBLIC include)
 #target_link_libraries(db_manager PRIVATE SQLiteCpp sqlite3)
 target_link_libraries(db_manager PUBLIC netodo_notes SQLiteCpp sqlite3)
+
+add_library(interface SHARED src/interface/IUI.cpp
+                             src/interface/ConsolUI.cpp)
+target_include_directories(interface PUBLIC include)
+
+add_library(netodo_app SHARED src/App.cpp)
+target_include_directories(netodo_app PUBLIC include)
