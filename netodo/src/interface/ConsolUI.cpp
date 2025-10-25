@@ -34,7 +34,7 @@ void ConsolUI::ProcessRequest() {
     } else if (command == "Q") {
         return;
     } else {
-        os_ << "Wrong command!" << std::endl;
+        os_ << "Wrong command: " << command << std::endl;
     }
     Show();
 }
@@ -43,11 +43,13 @@ void ConsolUI::ProcessRequest() {
 void ConsolUI::InputToDo() {
     os_ << "ToDo name:" << std::endl;
     std::string name;
-    is_ >> name;
+    is_ >> std::ws;
+    std::getline(is_, name);
 
     os_ << "ToDo description:" << std::endl;
     std::string description;
-    is_ >> description;
+    is_ >> std::ws;
+    std::getline(is_, description);
     int64_t id = app_.AddToDo(ToDo(name, description));
     os_ << "Add ToDo, id: " << id << std::endl;
 }
@@ -77,21 +79,23 @@ void ConsolUI::ShowToDos(const std::vector<ToDo>& todos) {
 void ConsolUI::InputTask() {
     os_ << "Task name:" << std::endl;
     std::string name;
-    is_ >> name;
+    is_ >> std::ws;
+    std::getline(is_, name);
 
     os_ << "Task description:" << std::endl;
     std::string description;
-    is_ >> description;
+    is_ >> std::ws;
+    std::getline(is_, description);
 
     int64_t task_id = app_.AddTask(Task(name, description));
     Task task = app_.GetTask(task_id);
     os_ << "Task's ToDos number" << std::endl;
     int todo_number;
-    std::cin >> todo_number;
+    is_ >> todo_number;
     os_ << "Task's ToDos ids:" << std::endl;
     for (int i = 0; i < todo_number; i++) {
         int64_t todo_id;
-        std::cin >> todo_id;
+        is_ >> todo_id;
         app_.AddToDoToTask(app_.GetToDo(todo_id), task);
     }
 }
