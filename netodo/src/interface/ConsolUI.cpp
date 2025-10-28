@@ -16,6 +16,8 @@ void ConsolUI::Show() {
     os_ << "2 - Create ToDo" << std::endl;
     os_ << "3 - Show all Tasks" << std::endl;
     os_ << "4 - Show all ToDos" << std::endl;
+    os_ << "5 - Show ToDo" << std::endl;
+    os_ << "6 - Show Task" << std::endl;
     os_ << "Q - Quit" << std::endl;
     ProcessRequest();
 }
@@ -31,6 +33,16 @@ void ConsolUI::ProcessRequest() {
         ShowTasks(app_.GetAllTask());
     } else if (command == "4") {
         ShowToDos(app_.GetAllToDo());
+    } else if (command == "5") {
+        os_ << "ToDo id: ";
+        int64_t id;
+        is_ >> id;
+        ShowToDo(app_.GetToDo(id));
+    } else if (command == "6") {
+        os_ << "Task id: ";
+        int64_t id;
+        is_ >> id;
+        ShowTask(app_.GetTask(id));
     } else if (command == "Q") {
         return;
     } else {
@@ -54,27 +66,98 @@ void ConsolUI::InputToDo() {
     os_ << "Add ToDo, id: " << id << std::endl;
 }
 
-void ConsolUI::EditToDo(ToDo& todo) {
+void ConsolUI::EditToDo(const ToDo& todo) {
+    os_ << "ToDo current name: " << todo.name << std::endl;
+    os_ << "ToDo new name: ";
+    std::string name;
+    is_ >> std::ws;
+    std::getline(is_, name);
+
+    os_ << "ToDo current description: " << todo.description << std::endl;
+    os_ << "ToDo new description: ";
+    std::string description;
+    is_ >> std::ws;
+    std::getline(is_, description);
+
+    ToDo updated_todo(todo);
+    updated_todo.name = name;
+    updated_todo.description = description;
+    app_.UpdateToDo(todo.id, updated_todo);
 }
 
 void ConsolUI::ShowToDos(const std::vector<ToDo>& todos) {
+    os_ << "-----------------------" << std::endl;
     for (auto& todo: todos) {
-        std::string status;
-        switch (todo.status) {
-            case NoteStatus::NotStarted:
-                status = "not started";
-                break;
-            case NoteStatus::InProgress:
-                status = "started";
-                break;
-            case NoteStatus::Completed:
-                status = "completed";
-        }
-        os_ << "ToDo id: " << todo.id  <<", name: " << todo.name << std::endl;
-        os_ << status << std::endl;
+        os_ << "ToDo id: " << todo.id << ", name: " << todo.name << std::endl;
+        os_ << StatusToText(todo.status) << std::endl;
         os_ << "-----------------------" << std::endl;
     }
 }
+
+void ConsolUI::ShowToDo(const ToDo& todo) {
+    os_ << "-----------------------" << std::endl;
+    os_ << "ToDo id: " << todo.id << std::endl;
+    os_ << "Name: " << todo.name << std::endl;
+    os_ << StatusToText(todo.status) << std::endl;
+    os_ << todo.description << std::endl;
+    os_ << "-----------------------" << std::endl;
+
+    ShowToDoCommands(todo);
+}
+
+void ConsolUI::ShowToDoCommands(const ToDo& todo) {
+    os_ << "Commands:" << std::endl;
+    os_ << "1 - Edit ToDo name and description" << std::endl;
+    os_ << "2 - Add ToDo to Task by id" << std::endl;
+    switch (todo.status) {
+        case NoteStatus::NotStarted:
+            os_ << "3 - Start ToDo" << std::endl;
+            break;
+        case NoteStatus::InProgress:
+            os_ << "3 - Completed ToDo" << std::endl;
+            break;
+        case NoteStatus::Completed:
+            os_ << "3 - Restart ToDo" << std::endl;
+    }
+    os_ << "Q - Go back home" << std::endl;
+
+    ProcessToDoRequest(todo);
+}
+
+void ConsolUI::ProcessToDoRequest(const ToDo& todo) {
+    std::string command;
+    is_ >> command;
+    if (command == "1") {
+        EditToDo(todo);
+    } else if (command == "2") {
+        os_ << "Task id: ";
+        int64_t task_id;
+        is_ >> task_id;
+        app_.AddToDoToTask(todo, app_.GetTask(task_id));
+    } else if (command == "3") {
+        auto new_status = NoteStatus::NotStarted;
+        switch (todo.status) {
+            case NoteStatus::NotStarted:
+                new_status = NoteStatus::InProgress;
+                break;
+            case NoteStatus::InProgress:
+                new_status = NoteStatus::Completed;
+                break;
+            case NoteStatus::Completed:
+                new_status = NoteStatus::InProgress;
+        }
+        ToDo updated_todo(todo);
+        updated_todo.status = new_status;
+        app_.UpdateToDo(todo.id, updated_todo);
+    } else if (command == "Q") {
+        return;
+    } else {
+        os_ << "Wrong command: " << command << std::endl;
+    }
+    ToDo updated_todo = app_.GetToDo(todo.id);
+    ShowToDo(updated_todo);
+}
+
 
 void ConsolUI::InputTask() {
     os_ << "Task name:" << std::endl;
@@ -100,25 +183,91 @@ void ConsolUI::InputTask() {
     }
 }
 
-void ConsolUI::EditTask(Task& task) {
+void ConsolUI::EditTask(const Task& task) {
+    os_ << "Task current name: " << task.name << std::endl;
+    os_ << "Task new name: ";
+    std::string name;
+    is_ >> std::ws;
+    std::getline(is_, name);
 
+    os_ << "Task current description: " << task.description << std::endl;
+    os_ << "Task new description: ";
+    std::string description;
+    is_ >> std::ws;
+    std::getline(is_, description);
+
+    Task updated_task(task);
+    updated_task.name = name;
+    updated_task.description = description;
+    app_.UpdateTask(task.id, updated_task);
 }
 
 void ConsolUI::ShowTasks(const std::vector<Task>& tasks) {
+    os_ << "-----------------------" << std::endl;
     for (auto& task: tasks) {
-        std::string status;
-        switch (task.status) {
-            case NoteStatus::NotStarted:
-                status = "not started";
-            break;
-            case NoteStatus::InProgress:
-                status = "started";
-            break;
-            case NoteStatus::Completed:
-                status = "completed";
-        }
-        os_ << "Task id: " << task.id  <<", name: " << task.name << std::endl;
+        std::string status = StatusToText(task.status);
+        os_ << "Task id: " << task.id << ", name: " << task.name << std::endl;
         os_ << status << std::endl;
         os_ << "-----------------------" << std::endl;
     }
+}
+
+void ConsolUI::ShowTask(const Task& task) {
+    os_ << "-----------------------" << std::endl;
+    os_ << "Task id: " << task.id << std::endl;
+    os_ << "Name: " << task.name << std::endl;
+    os_ << StatusToText(task.status) << std::endl;
+    os_ << task.description << std::endl;
+    os_ << "-----------------------" << std::endl;
+
+    ShowTaskCommands(task);
+}
+
+void ConsolUI::ShowTaskCommands(const Task& task) {
+    os_ << "Commands:" << std::endl;
+    os_ << "1 - Edit Task name and description" << std::endl;
+    os_ << "2 - Show Task's ToDos" << std::endl;
+    os_ << "3 - Add ToDo to Task by id" << std::endl;
+    os_ << "Q - Go back home" << std::endl;
+
+    ProcessTaskRequest(task);
+}
+
+void ConsolUI::ProcessTaskRequest(const Task& task) {
+    std::string command;
+    is_ >> command;
+    if (command == "1") {
+        EditTask(task);
+    } else if (command == "2") {
+        ShowTaskToDos(task);
+    } else if (command == "3") {
+        os_ << "ToDo id: ";
+        int64_t todo_id;
+        is_ >> todo_id;
+        app_.AddToDoToTask(app_.GetToDo(todo_id), task);
+    } else if (command == "Q") {
+        return;
+    } else {
+        os_ << "Wrong command: " << command << std::endl;
+    }
+    Task updated_task = app_.GetTask(task.id);
+    ShowTask(updated_task);
+}
+
+void ConsolUI::ShowTaskToDos(const Task& task) {
+    std::vector<ToDo> todos = app_.GetToDoByTask(task);
+    ShowToDos(todos);
+}
+
+
+std::string ConsolUI::StatusToText(NoteStatus status) {
+    switch (status) {
+        case NoteStatus::NotStarted:
+            return "not started";
+        case NoteStatus::InProgress:
+            return "started";
+        case NoteStatus::Completed:
+            return "completed";
+    }
+    return "";
 }

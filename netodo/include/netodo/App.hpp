@@ -15,7 +15,7 @@ public:
     [[nodiscard]] int64_t AddToDo(const ToDo& todo) const;
     [[nodiscard]] int64_t AddTask(const Task& task) const;
     void AddToDoToTask(const ToDo& todo, const Task& task) const;
-    void UpdateTodo(int64_t id, const ToDo& todo) const;
+    void UpdateToDo(int64_t id, const ToDo& todo) const;
     void UpdateTask(int64_t id, const Task& task) const;
 
     [[nodiscard]] std::vector<ToDo> GetAllToDo() const;

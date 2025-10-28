@@ -15,7 +15,7 @@ int64_t App::AddTask(const Task& task) const {
     return task_db_.AddTask(task);
 }
 
-void App::UpdateTodo(int64_t id, const ToDo& todo) const {
+void App::UpdateToDo(int64_t id, const ToDo& todo) const {
     todo_db_.UpdateToDo(id, todo);
 }
 
@@ -24,7 +24,7 @@ void App::UpdateTask(int64_t id, const Task& task) const {
 }
 
 void App::AddToDoToTask(const ToDo& todo, const Task& task) const {
-    UpdateTodo(todo.id, ToDo(task.id, todo.id,
+    UpdateToDo(todo.id, ToDo(task.id, todo.id,
         todo.name, todo.description, todo.status));
 }
 

@@ -11,7 +11,7 @@
 
 #include "netodo/interface/IUI.hpp"
 
-class ConsolUI : public IUI {
+class ConsolUI: public IUI {
 public:
     ConsolUI(std::istream& is, std::ostream& os, App& app);
     ~ConsolUI() override = default;
@@ -19,12 +19,21 @@ public:
     void Show() override;
     void ShowToDos(const std::vector<ToDo>& todos) override;
     void ShowTasks(const std::vector<Task>& tasks) override;
+    void ShowToDo(const ToDo& todo) override;
+    void ShowTask(const Task& task) override;
     void InputToDo() override;
     void InputTask() override;
-    void EditToDo(ToDo& todo) override;
-    void EditTask(Task& task) override;
+    void EditToDo(const ToDo& todo) override;
+    void EditTask(const Task& task) override;
 private:
     void ProcessRequest();
+
+    void ShowToDoCommands(const ToDo& todo);
+    void ProcessToDoRequest(const ToDo& todo);
+    void ShowTaskCommands(const Task& task);
+    void ProcessTaskRequest(const Task& task);
+    void ShowTaskToDos(const Task& task);
+    static std::string StatusToText(NoteStatus status);
 
     std::istream& is_;
     std::ostream& os_;

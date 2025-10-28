@@ -16,10 +16,12 @@ public:
     virtual void Show() = 0;
     virtual void ShowToDos(const std::vector<ToDo>& todos) = 0;
     virtual void ShowTasks(const std::vector<Task>& tasks) = 0;
+    virtual void ShowToDo(const ToDo& todo) = 0;
+    virtual void ShowTask(const Task& task) = 0;
     virtual void InputToDo() = 0;
     virtual void InputTask() = 0;
-    virtual void EditToDo(ToDo& todo) = 0;
-    virtual void EditTask(Task& task) = 0;
+    virtual void EditToDo(const ToDo& todo) = 0;
+    virtual void EditTask(const Task& task) = 0;
 };
 
 #endif //IUI_HPP
