@@ -45,3 +45,4 @@ jobs:
           cd build/test
           ./note_test
           ./db_test
+          ./exception_test
