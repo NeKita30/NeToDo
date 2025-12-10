@@ -18,8 +18,8 @@ public:
     virtual void ShowTasks(const std::vector<Task>& tasks) = 0;
     virtual void ShowToDo(const ToDo& todo) = 0;
     virtual void ShowTask(const Task& task) = 0;
-    virtual void InputToDo() = 0;
-    virtual void InputTask() = 0;
+    virtual int64_t InputToDo() = 0;
+    virtual int64_t InputTask() = 0;
     virtual void EditToDo(const ToDo& todo) = 0;
     virtual void EditTask(const Task& task) = 0;
 };

@@ -5,6 +5,8 @@
 #ifndef APP_HPP
 #define APP_HPP
 
+#include <optional>
+
 #include "netodo/db_manager/TaskDBManager.hpp"
 #include "netodo/db_manager/ToDoDBManager.hpp"
 
@@ -20,11 +22,12 @@ public:
 
     [[nodiscard]] std::vector<ToDo> GetAllToDo() const;
     [[nodiscard]] std::vector<Task> GetAllTask() const;
-    [[nodiscard]] std::vector<ToDo> GetToDoByTask(const Task& task) const;
+    [[nodiscard]] std::vector<ToDo> GetToDosByTask(const Task& task) const;
     [[nodiscard]] ToDo GetToDo(int64_t id) const;
     [[nodiscard]] Task GetTask(int64_t id) const;
+    std::optional<Task> GetTaskByTodo(const ToDo& todo) const;
 private:
-    ToDoDBManager todo_db_;
+        ToDoDBManager todo_db_;
     TaskDBManager task_db_;
 
     void UpdateTaskByToDos(const Task& task) const;

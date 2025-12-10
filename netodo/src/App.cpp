@@ -25,7 +25,7 @@ void App::UpdateToDo(int64_t id, const ToDo& todo) const {
 }
 
 void App::UpdateTaskByToDos(const Task& task) const {
-    std::vector<ToDo> children = GetToDoByTask(task);
+    std::vector<ToDo> children = GetToDosByTask(task);
     auto new_max_bar = static_cast<int32_t>(children.size());
     int32_t new_progress = 0;
     NoteStatus new_status = task.status;
@@ -65,7 +65,7 @@ std::vector<Task> App::GetAllTask() const {
     return task_db_.GetAllTask();
 }
 
-std::vector<ToDo> App::GetToDoByTask(const Task& task) const {
+std::vector<ToDo> App::GetToDosByTask(const Task& task) const {
     return todo_db_.GetAllToDoByParent(task.id);
 }
 
@@ -75,5 +75,12 @@ ToDo App::GetToDo(int64_t id) const {
 
 Task App::GetTask(int64_t id) const {
     return task_db_.GetTask(id);
+}
+
+std::optional<Task> App::GetTaskByTodo(const ToDo& todo) const {
+    if (!todo.HasParent()) {
+        return std::nullopt;
+    }
+    return GetTask(todo.parent_id);
 }
 

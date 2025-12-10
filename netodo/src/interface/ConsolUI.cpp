@@ -52,7 +52,7 @@ void ConsolUI::ProcessRequest() {
 }
 
 
-void ConsolUI::InputToDo() {
+int64_t ConsolUI::InputToDo() {
     os_ << "ToDo name:" << std::endl;
     std::string name;
     is_ >> std::ws;
@@ -64,6 +64,7 @@ void ConsolUI::InputToDo() {
     std::getline(is_, description);
     int64_t id = app_.AddToDo(ToDo(name, description));
     os_ << "Add ToDo, id: " << id << std::endl;
+    return id;
 }
 
 void ConsolUI::EditToDo(const ToDo& todo) {
@@ -98,6 +99,10 @@ void ConsolUI::ShowToDo(const ToDo& todo) {
     os_ << "-----------------------" << std::endl;
     os_ << "ToDo id: " << todo.id << std::endl;
     os_ << "Name: " << todo.name << std::endl;
+    auto task_of_todo = app_.GetTaskByTodo(todo);
+    if (task_of_todo.has_value()) {
+        os_ << "From Task " << task_of_todo->name << ", id: " << task_of_todo->id << std::endl;
+    }
     os_ << StatusToText(todo.status) << std::endl;
     os_ << todo.description << std::endl;
     os_ << "-----------------------" << std::endl;
@@ -159,7 +164,7 @@ void ConsolUI::ProcessToDoRequest(const ToDo& todo) {
 }
 
 
-void ConsolUI::InputTask() {
+int64_t ConsolUI::InputTask() {
     os_ << "Task name:" << std::endl;
     std::string name;
     is_ >> std::ws;
@@ -182,6 +187,7 @@ void ConsolUI::InputTask() {
         app_.AddToDoToTask(app_.GetToDo(todo_id), task);
     }
     os_ << "Add Task, id: " << task_id << std::endl;
+    return task_id;
 }
 
 void ConsolUI::EditTask(const Task& task) {
@@ -230,6 +236,7 @@ void ConsolUI::ShowTaskCommands(const Task& task) {
     os_ << "1 - Edit Task name and description" << std::endl;
     os_ << "2 - Show Task's ToDos" << std::endl;
     os_ << "3 - Add ToDo to Task by id" << std::endl;
+    os_ << "4 - Create ToDo in this Task" << std::endl;
     os_ << "Q - Go back home" << std::endl;
 
     ProcessTaskRequest(task);
@@ -247,6 +254,9 @@ void ConsolUI::ProcessTaskRequest(const Task& task) {
         int64_t todo_id;
         is_ >> todo_id;
         app_.AddToDoToTask(app_.GetToDo(todo_id), task);
+    } else if (command == "4") {
+        int64_t todo_id = InputToDo();
+        app_.AddToDoToTask(app_.GetToDo(todo_id), task);
     } else if (command == "Q") {
         return;
     } else {
@@ -257,7 +267,7 @@ void ConsolUI::ProcessTaskRequest(const Task& task) {
 }
 
 void ConsolUI::ShowTaskToDos(const Task& task) {
-    std::vector<ToDo> todos = app_.GetToDoByTask(task);
+    std::vector<ToDo> todos = app_.GetToDosByTask(task);
     ShowToDos(todos);
 }
 

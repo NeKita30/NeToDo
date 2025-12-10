@@ -21,8 +21,8 @@ public:
     void ShowTasks(const std::vector<Task>& tasks) override;
     void ShowToDo(const ToDo& todo) override;
     void ShowTask(const Task& task) override;
-    void InputToDo() override;
-    void InputTask() override;
+    int64_t InputToDo() override;
+    int64_t InputTask() override;
     void EditToDo(const ToDo& todo) override;
     void EditTask(const Task& task) override;
 private:
