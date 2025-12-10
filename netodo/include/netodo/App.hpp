@@ -26,6 +26,8 @@ public:
 private:
     ToDoDBManager todo_db_;
     TaskDBManager task_db_;
+
+    void UpdateTaskByToDos(const Task& task) const;
 };
 
 #endif //APP_HPP

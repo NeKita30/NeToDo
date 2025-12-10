@@ -16,3 +16,7 @@ ToDo::ToDo(const int64_t parent_id, const int64_t id, const std::string& name,
     parent_id(parent_id),
     status(status) {
 }
+
+bool ToDo::HasParent() const {
+    return parent_id != 0;
+}

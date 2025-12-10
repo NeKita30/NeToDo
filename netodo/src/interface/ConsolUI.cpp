@@ -217,6 +217,7 @@ void ConsolUI::ShowTask(const Task& task) {
     os_ << "Task id: " << task.id << std::endl;
     os_ << "Name: " << task.name << std::endl;
     os_ << StatusToText(task.status) << std::endl;
+    os_ << "Progress: " << task.progress_bar << " of " << task.max_bar << std::endl;
     os_ << task.description << std::endl;
     os_ << "-----------------------" << std::endl;
 

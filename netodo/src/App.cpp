@@ -16,16 +16,45 @@ int64_t App::AddTask(const Task& task) const {
 }
 
 void App::UpdateToDo(int64_t id, const ToDo& todo) const {
+    ToDo prev_todo = GetToDo(id);
     todo_db_.UpdateToDo(id, todo);
+    if (todo.HasParent()) {
+        Task task = GetTask(todo.parent_id);
+        UpdateTaskByToDos(task);
+    }
 }
+
+void App::UpdateTaskByToDos(const Task& task) const {
+    std::vector<ToDo> children = GetToDoByTask(task);
+    auto new_max_bar = static_cast<int32_t>(children.size());
+    int32_t new_progress = 0;
+    NoteStatus new_status = task.status;
+    for (const auto& child : children) {
+        if (child.status == NoteStatus::Completed) {
+            ++new_progress;
+        } else if (child.status == NoteStatus::InProgress) {
+            new_status = NoteStatus::InProgress;
+        }
+    }
+    if (new_progress == new_max_bar) {
+        new_status = NoteStatus::Completed;
+    }
+    Task updated_task = task;
+    updated_task.status = new_status;
+    updated_task.max_bar = new_max_bar;
+    updated_task.progress_bar = new_progress;
+    UpdateTask(task.id, updated_task);
+}
+
 
 void App::UpdateTask(int64_t id, const Task& task) const {
     task_db_.UpdateTask(id, task);
 }
 
 void App::AddToDoToTask(const ToDo& todo, const Task& task) const {
-    UpdateToDo(todo.id, ToDo(task.id, todo.id,
+    todo_db_.UpdateToDo(todo.id, ToDo(task.id, todo.id,
         todo.name, todo.description, todo.status));
+    UpdateTaskByToDos(task);
 }
 
 std::vector<ToDo> App::GetAllToDo() const {

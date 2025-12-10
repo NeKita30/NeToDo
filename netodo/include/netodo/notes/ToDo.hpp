@@ -16,6 +16,8 @@ struct ToDo : Note {
 
     ToDo(int64_t parent_id, int64_t id, const std::string& name = "", const std::string& description = "",
          NoteStatus status = NoteStatus::NotStarted);
+
+    [[nodiscard]] bool HasParent() const;
 };
 
 #endif //TODO_HPP
