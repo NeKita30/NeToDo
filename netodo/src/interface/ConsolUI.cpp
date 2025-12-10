@@ -181,6 +181,7 @@ void ConsolUI::InputTask() {
         is_ >> todo_id;
         app_.AddToDoToTask(app_.GetToDo(todo_id), task);
     }
+    os_ << "Add Task, id: " << task_id << std::endl;
 }
 
 void ConsolUI::EditTask(const Task& task) {
