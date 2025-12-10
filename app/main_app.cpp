@@ -14,6 +14,7 @@ int main() {
     std::cout << "Name of NeToDo base: ";
     std::string base_name;
     std::cin >> base_name;
+    base_name += ".db";
     TaskDBManager task_db(base_name);
     ToDoDBManager todo_db(base_name);
     App app(todo_db, task_db);
